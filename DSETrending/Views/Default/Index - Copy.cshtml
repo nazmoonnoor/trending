@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+@section headscripts{
+<script> var __basePath = ''; </script>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+<script src="https://unpkg.com/ag-grid@18.1.1/dist/ag-grid.min.js"></script>    
+<link rel="stylesheet" href="styles.css"> 
+}
+
+    <div ng-app="basic">
+
+        <div ng-controller="basicController" style="width: 800px;">
+            <div style="padding: 4px">
+                <div style="float: right;">
+                    <input type="text" ng-model="gridOptions.quickFilterText" placeholder="Type text to filter..." />
+                </div>
+                <div style="padding: 4px;">
+                    <b>Employees Skills and Contact Details</b> ({{rowCount}})
+                </div>
+                <div style="clear: both;" />
+            </div>
+            <div style="width: 100%; height: 800px;"
+                 ag-grid="gridOptions"
+                 class="ag-theme-balham ag-basic">
+            </div>
+        </div>
+
+    </div>
+
+@section headscripts{
+    <script src="~/Scripts/app/stock-grid.js"></script>
+}

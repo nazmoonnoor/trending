@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+@model IEnumerable<dynamic>
+@{
+    var qs = HttpUtility.ParseQueryString(HttpContext.Current.Request.Url.Query);
+    int nextpage = string.IsNullOrEmpty(qs["page"]) ? 2 : Convert.ToInt32(qs["page"]) + 1;
+    int prepage = string.IsNullOrEmpty(qs["page"]) ? 0 : Convert.ToInt32(qs["page"]) - 1;
+    string disabled = prepage < 1 ? "disabled" : string.Empty;
+}
+<div style="padding: 10px; text-align: right;"><strong>@ViewData["PageHeader"]</strong></div>
+<div class="columns is-multiline is-mobile">
+    @for (int i = 0; i < Model.Count(); i++)
+    {
+        <div class="column is-3">
+            @{
+                var item = Model.ElementAt(i);
+                string lankabd = string.Format(@"http://lankabd.com/portal/DSE/smartChartFullScreen.html?symbol={0}&siteLanguage=en", item.Code);
+                string amarstock = string.Format(@"https://www.amarstock.com/interactive-chart?symbol={0}", item.Code);
+                bool spikedVolume = item.VolumeSum < item.DayVolumn;
+                decimal DayValueInKoti = int.Parse(item.DayValue.ToString()) / 10000000;
+            }
+            <div class="card is-shady">
+                <div class="card-image">
+                    <iframe src="@lankabd"
+                            style="border:0px #ffffff none;" name="myiFrame" scrolling="no" frameborder="1" marginheight="0px"
+                            marginwidth="0px" height="300px" width="450px" allowfullscreen></iframe>
+                </div>
+                <div class="card-content" style="padding: 0;font-size:0.9em">
+                    <div class="media">
+                        <div class="media-content" style="padding-left: 15px;">
+                            <strong class="is-4 no-padding">@item.Code</strong>
+                            <p class="is-4 no-padding">Vol: @item.DayVolumn, Value: @DayValueInKoti</p>
+                            <p>@item.TotalTrade</p>
+                            <p>@item.DayRange</p>
+                            <p>Cat: @item.MarketCategory, Electronic: @item.Electronic</p>
+                        </div>
+                        @if (spikedVolume)
+                        {
+                            <div class="media-left">
+                                <figure class="image is-48x48">
+                                    <img src="~/Content/images/red-check-mark.png" alt="Image">
+                                </figure>
+                            </div>
+                        }
+                        
+                    </div>
+                    <div class="content">
+                        <a class="button is-primary is-small" href="@lankabd" target="_blank">View chart</a>
+                        <a class="button is-info is-small" href="@amarstock" target="_blank">Detail</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+                }
+</div>
+<div class="pagination-container">
+    <nav class="pagination" role="navigation" aria-label="pagination">
+        <a class="pagination-previous" href="~/default?page=@prepage" @disabled>Previous</a>
+        <a class="pagination-next" href="~/default?page=@nextpage">Next page</a>
+        <ul class="pagination-list">
+            <li>
+                <a class="pagination-link is-current" aria-label="Page 1">1</a>@*aria-current="page"*@
+            </li>
+            <li>
+                <a class="pagination-link" aria-label="Goto page 2">2</a>
+            </li>
+            <li>
+                <a class="pagination-link" aria-label="Goto page 3">3</a>
+            </li>
+        </ul>
+    </nav>
+</div>

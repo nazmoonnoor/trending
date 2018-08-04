@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSETrending", "DSETrending\DSETrending.csproj", "{FB70920B-1E67-4CEC-8778-FCEEA73B874B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Collector", "Collector\Collector.csproj", "{8AEC136F-95F9-4D7C-8643-03C24A57C989}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{CDA41F1A-8EB0-440C-9613-3478686064F0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB70920B-1E67-4CEC-8778-FCEEA73B874B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB70920B-1E67-4CEC-8778-FCEEA73B874B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB70920B-1E67-4CEC-8778-FCEEA73B874B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB70920B-1E67-4CEC-8778-FCEEA73B874B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AEC136F-95F9-4D7C-8643-03C24A57C989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AEC136F-95F9-4D7C-8643-03C24A57C989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AEC136F-95F9-4D7C-8643-03C24A57C989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AEC136F-95F9-4D7C-8643-03C24A57C989}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDA41F1A-8EB0-440C-9613-3478686064F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDA41F1A-8EB0-440C-9613-3478686064F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDA41F1A-8EB0-440C-9613-3478686064F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDA41F1A-8EB0-440C-9613-3478686064F0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B55E779C-0156-497F-830C-965CE76B3D36}
+	EndGlobalSection
+EndGlobal
