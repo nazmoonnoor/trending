@@ -40,7 +40,7 @@ public class SqliteDataAccess
             {
                 // _connectionString = ConfigurationManager.ConnectionStrings[CONNECTION_STRING_NAME].ConnectionString;
                // _connectionString = string.Format("Data Source={0};Version=3;", System.Web.HttpContext.Current.Server.MapPath(@"~\App_Data\trending.sqlite3"));
-                _connectionString = string.Format("Data Source={0};Version=3;", @"C:\Projects\DSETrending\db\trending.sqlite3");
+                _connectionString = string.Format("Data Source={0};Version=3;", @"C:\sandbox\github_com\trending\db\trending.sqlite3");
             }
             return _connectionString;
         }

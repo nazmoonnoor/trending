@@ -17,5 +17,7 @@ namespace Core
             sw.Stop();
             return sw.Elapsed.Milliseconds;
         }
+
+        public static int 
     }
 }
