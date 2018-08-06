@@ -17,11 +17,6 @@ namespace Core
     {
         public static List<string> GetCompanyCodes()
         {
-            //var cc = new List<string>(); //GetCompanyCodes();
-            //cc.Add("1JANATAMF");
-            //cc.Add("AIL");
-            //return cc;
-
             var codes = new List<string>();
             const Int32 BufferSize = 128;
             //using (var fileStream = System.IO.File.OpenRead(HostingEnvironment.MapPath(@"~/App_Data/codes.txt")))
@@ -34,7 +29,7 @@ namespace Core
                     codes.Add(line.Trim());
                 }
             }
-            
+
             return codes;
         }
 
@@ -44,7 +39,7 @@ namespace Core
             List<Dictionary<string, object>> trades = new List<Dictionary<string, object>>();
             var codes = GetCompanyCodes();
 
-            for(int i = counter-1; i < codes.Count(); i++)
+            for (int i = counter - 1; i < codes.Count(); i++)
             {
                 string fundamental = string.Format("https://www.amarstock.com/api/feed/fundamental/basic?code={0}", codes[i]);
                 using (System.Net.WebClient wc = new System.Net.WebClient())
@@ -72,7 +67,7 @@ namespace Core
         {
             Thread.Sleep(600);
             Console.Clear();
-            Console.WriteLine(string.Format("{1} out of {2} - {0}", code, i+1, total));
+            Console.WriteLine(string.Format("{1} out of {2} - {0}", code, i + 1, total));
         }
 
         private static Dictionary<string, object> GetTradeData(string code, dynamic data)
@@ -90,7 +85,7 @@ namespace Core
             trade.Add("YCP", data["YCP"]);
             trade.Add("MarketCategory", data["MarketCategory"]);
             trade.Add("Electronic", data["Electronic"]);
-            
+
             return trade;
         }
 
@@ -111,7 +106,7 @@ namespace Core
                                        VALUES (@Code,@LastUpdate,@DayVolumn,@DayValue,@TotalTrade,@DayRange,@Week52Range,@LTP,@YCP,@MarketCategory,@Electronic)";
             var connection = new SQLiteConnection(SqliteDataAccess.ConnectionString);
             var command = new SQLiteCommand(query, connection);
-            
+
             command.Parameters.AddWithValue("@Code", trade["Code"]);
             command.Parameters.AddWithValue("@LastUpdate", trade["LastUpdate"]);
             command.Parameters.AddWithValue("@DayVolumn", trade["DayVolumn"]);
@@ -130,7 +125,7 @@ namespace Core
         public static IEnumerable<dynamic> GetTrades(int days = 10)
         {
             var dal = new SqliteDataAccess();
-        
+
             string query = string.Format(@"SELECT Code, LastUpdate, DayVolumn, DayValue, TotalTrade, DayRange, Week52Range, LTP, YCP, MarketCategory,Electronic
                                 FROM Tradings
                                 WHERE CAST(strftime('%s', LastUpdate)  AS  integer) >= CAST(strftime('%s', '{0}')  AS  integer)", DateTime.Today.AddDays(-days).DateTimeFormat());
@@ -146,7 +141,7 @@ namespace Core
         public static DateTime GetLastDayTrade()
         {
             var dal = new SqliteDataAccess();
-        
+
             string query = string.Format(@"SELECT MAX(CAST(strftime('%s', LastUpdate)  AS  integer)), LastUpdate FROM Tradings");
 
             var connection = new SQLiteConnection(SqliteDataAccess.ConnectionString);
@@ -164,7 +159,7 @@ namespace Core
             var lastThreeDays = lastWorkDay.LastThreeWorkDay();
 
             var dal = new SqliteDataAccess();
-            
+
             string query = string.Format(@"SELECT Code, LastUpdate, DayVolumn, DayValue, TotalTrade, DayRange, Week52Range, LTP, YCP, MarketCategory,Electronic, 
                     tdv.VolumeSum AS VolumeSum 
                     FROM Tradings
@@ -176,28 +171,37 @@ namespace Core
             var command = new SQLiteCommand(query, connection);
 
             var dt = dal.Execute(command);
-
             var result = dt.ReadAsDynamicEnumerable();
 
-            //if (!isSpiked)
-            //{
-            //    foreach (var item in result)
-            //    {
-            //        yield return item;
-            //    }
-            //}
-            //else
-            //{
-                foreach (var item in result)
+            foreach (var item in result)
+            {
+                if (isSpiked)
                 {
-                    if(isSpiked)
-                    {
-                        if(item.VolumeSum < item.DayVolumn)
-                            yield return item;
-                    }
-                    else yield return item;
+                    if (item.VolumeSum < item.DayVolumn)
+                        yield return item;
                 }
-            //}
+                else yield return item;
+            }
+        }
+
+        public static dynamic GetNowTrades()
+        {
+            string fundamental = string.Format("https://www.amarstock.com/top/all/mostactiveblock");
+            using (System.Net.WebClient wc = new System.Net.WebClient())
+            {
+                try
+                {
+                    var json = wc.DownloadString(fundamental);
+                    dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                    List<dynamic> list = Enumerable.ToList<dynamic>(data);
+                    return Extensions.Sort(list, "Value");
+                }
+                catch
+                {
+                    GetNowTrades();
+                }
+            }
+            return null;
         }
     }
 }

@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "Now";
+}
+
+@model List<string>
+
+@{
+    var mostactiveblock = Core.AppManager.GetNowTrades();
+    <table class="table">
+        <thead>
+            <tr>
+                <th><abbr title="Scrip">Scrip</abbr></th>
+                <th><abbr title="LTP">LTP</abbr></th>
+                <th><abbr title="Trade">Trade</abbr></th>
+                <th><abbr title="Value">Value</abbr></th>
+                <th><abbr title="Volume">Volume</abbr></th>
+            </tr>
+        </thead>
+        <tbody>
+        @for (int i = 0; i < mostactiveblock.Count; i++)
+        {
+        var now = mostactiveblock[i];
+        <tr>
+            <td>
+                @now.Scrip
+            </td>
+            <td>@now.LTP</td>
+            <td>@now.Trade</td>
+            <td>@now.Value</td>
+            <td>@now.Volume</td>
+            
+        </tr>
+        }
+        </tbody>
+    </table>
+}
+
