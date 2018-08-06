@@ -143,17 +143,34 @@ namespace Core
             return dt.ReadAsDynamicEnumerable();
         }
 
+        public static DateTime GetLastDayTrade()
+        {
+            var dal = new SqliteDataAccess();
+        
+            string query = string.Format(@"SELECT MAX(CAST(strftime('%s', LastUpdate)  AS  integer)), LastUpdate FROM Tradings");
+
+            var connection = new SQLiteConnection(SqliteDataAccess.ConnectionString);
+            var command = new SQLiteCommand(query, connection);
+
+            var dt = dal.Execute(command);
+
+            return dt.Rows.Count > 0 ? Convert.ToDateTime(dt.Rows[0]["LastUpdate"].ToString()) : DateTime.MinValue;
+        }
+
         public static IEnumerable<dynamic> GetLastDayTrades(string orderby, bool isSpiked = false)
         {
-            var lastWorkDay = DateTime.Today.LastWorkDay();
-            var dal = new SqliteDataAccess();
+            var lastWorkDay = GetLastDayTrade();
+            if (lastWorkDay == DateTime.MinValue) yield return null;
+            var lastThreeDays = lastWorkDay.LastThreeWorkDay();
 
+            var dal = new SqliteDataAccess();
+            
             string query = string.Format(@"SELECT Code, LastUpdate, DayVolumn, DayValue, TotalTrade, DayRange, Week52Range, LTP, YCP, MarketCategory,Electronic, 
                     tdv.VolumeSum AS VolumeSum 
                     FROM Tradings
                     INNER JOIN (SELECT Code AS c, SUM(DayVolumn) VolumeSum FROM Tradings WHERE LastUpdate = '{0}' or LastUpdate = '{1}' GROUP BY Code) AS tdv ON tdv.c = Tradings.Code
                     WHERE CAST(strftime('%s', LastUpdate)  AS  integer) = (SELECT MAX(CAST(strftime('%s', LastUpdate)  AS  integer)) FROM Tradings)
-                    ORDER BY {2} DESC", lastWorkDay.AddDays(-1).DateTimeFormat(), lastWorkDay.AddDays(-2).DateTimeFormat(), orderby);
+                    ORDER BY {2} DESC", lastThreeDays[0].DateTimeFormat(), lastThreeDays[1].DateTimeFormat(), orderby);
 
             var connection = new SQLiteConnection(SqliteDataAccess.ConnectionString);
             var command = new SQLiteCommand(query, connection);
@@ -162,23 +179,25 @@ namespace Core
 
             var result = dt.ReadAsDynamicEnumerable();
 
-            if (!isSpiked)
-            {
+            //if (!isSpiked)
+            //{
+            //    foreach (var item in result)
+            //    {
+            //        yield return item;
+            //    }
+            //}
+            //else
+            //{
                 foreach (var item in result)
                 {
-                    yield return item;
-                }
-            }
-            else
-            {
-                foreach (var item in result)
-                {
-                    if(item.VolumeSum < item.DayVolumn)
+                    if(isSpiked)
                     {
-                        yield return item;
+                        if(item.VolumeSum < item.DayVolumn)
+                            yield return item;
                     }
+                    else yield return item;
                 }
-            }
+            //}
         }
     }
 }

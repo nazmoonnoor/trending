@@ -63,6 +63,22 @@ namespace Core
             return date;
         }
 
+        public static DateTime[] LastThreeWorkDay(this DateTime date)
+        {
+            var lastThreeDays = new List<DateTime>();
+
+            while (lastThreeDays.Count < 4)
+            {
+                date = date.AddDays(-1);
+                if (!IsWeekend(date))
+                {
+                    lastThreeDays.Add(date);
+                }
+            }
+
+            return lastThreeDays.ToArray();
+        }
+
         private static bool IsWeekend(DateTime date)
         {
             return date.DayOfWeek == DayOfWeek.Saturday ||

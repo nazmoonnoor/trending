@@ -18,6 +18,6 @@ namespace Core
             return sw.Elapsed.Milliseconds;
         }
 
-        public static int 
+        //public static int 
     }
 }
