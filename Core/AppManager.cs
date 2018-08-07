@@ -193,8 +193,7 @@ namespace Core
                 {
                     var json = wc.DownloadString(fundamental);
                     dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
-                    List<dynamic> list = Enumerable.ToList<dynamic>(data);
-                    return Extensions.Sort(list, "Value");
+                    return data;
                 }
                 catch
                 {

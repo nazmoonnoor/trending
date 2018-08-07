@@ -23,6 +23,9 @@ namespace DSETrending
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/vue").Include(
+                "~/Scripts/vue.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/bulma").Include(
                         "~/Scripts/bulma.js"));
 

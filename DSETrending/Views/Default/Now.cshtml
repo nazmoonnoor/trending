@@ -3,36 +3,45 @@
     ViewBag.Title = "Now";
 }
 
-@model List<string>
-
-@{
-    var mostactiveblock = Core.AppManager.GetNowTrades();
-    <table class="table">
-        <thead>
-            <tr>
-                <th><abbr title="Scrip">Scrip</abbr></th>
-                <th><abbr title="LTP">LTP</abbr></th>
-                <th><abbr title="Trade">Trade</abbr></th>
-                <th><abbr title="Value">Value</abbr></th>
-                <th><abbr title="Volume">Volume</abbr></th>
-            </tr>
-        </thead>
-        <tbody>
-        @for (int i = 0; i < mostactiveblock.Count; i++)
-        {
-        var now = mostactiveblock[i];
-        <tr>
-            <td>
-                @now.Scrip
-            </td>
-            <td>@now.LTP</td>
-            <td>@now.Trade</td>
-            <td>@now.Value</td>
-            <td>@now.Volume</td>
-            
-        </tr>
-        }
-        </tbody>
-    </table>
+@section scripts{
+    <script type="text/javascript" src="~/Scripts/app/now.component.js"></script>
 }
 
+@model List<string>
+
+<!-- component template -->
+<script type="text/x-template" id="grid-template">
+  <table>
+    <thead>
+      <tr>
+        <th v-for="key in columns"
+          v-on:click="sortBy(key)"
+          :class="{ active: sortKey == key }">
+          {{ key | capitalize }}
+          <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="entry in filteredData">
+        <td v-for="key in columns">
+          {{entry[key]}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</script>
+
+<!-- now root element -->
+<div id="now">
+    <form id="search">
+        Search <input name="query" v-model="searchQuery">
+    </form>
+    <br />
+    <now-grid
+        :data="gridData"
+        :columns="gridColumns"
+        :filter-key="searchQuery">
+    </now-grid>
+</div>
