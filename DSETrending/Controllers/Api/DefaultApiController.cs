@@ -15,10 +15,16 @@ namespace DSETrending.Controllers.Api
     public class DefaultApiController : ApiController
     {
         [HttpGet]
-        //[Route("GetTrades")]
         public IHttpActionResult GetTrades()
         {
             var result = AppManager.GetTrades(1);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public IHttpActionResult Now()
+        {
+            var result = AppManager.GetNowTrades();
             return Ok(result);
         }
     }
