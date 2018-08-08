@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "Now";
+}
+
+@section scripts{
+    <script type="text/javascript" src="~/Scripts/app/now.component.js"></script>
+}
+
+@model List<string>
+
+<!-- component template -->
+<script type="text/x-template" id="grid-template">
+  <table class="gridtable">
+    <thead>
+      <tr>
+        <th>Links</th>
+        <th v-for="key in columns"
+          v-on:click="sortBy(key)"
+          :class="{ active: sortKey == key }">
+          {{ key | capitalize }}
+          <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="entry in filteredData">
+        <td>
+            <a :href="`https://www.amarstock.com/chart?symbol=${entry[columns[1]]}`" target="_blank">sc</a>
+            <a :href="`https://www.amarstock.com/interactive-chart?symbol=${entry[columns[1]]}`" target="_blank">ic</a>
+            <a :href="`https://www.amarstock.com/volume-price-analysis?symbol=${entry[columns[1]]}`" target="_blank">vpa</a>
+        </td>
+        <td v-for="key in columns">
+          {{entry[key]}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</script>
+
+<!-- now root element -->
+<div id="now">
+    <form id="search">
+        Search <input name="query" v-model="searchQuery">
+    </form>
+    <br />
+    <now-grid
+        :data="gridData"
+        :columns="gridColumns"
+        :filter-key="searchQuery">
+    </now-grid>
+</div>

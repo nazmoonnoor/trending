@@ -1,0 +1,15 @@
+﻿INSERT INTO Tradings ( `Code`, `LastUpdate`, `DayVolumn`, `DayValue`, `TotalTrade`, `DayRange`, `Week52Range`, `LTP`, `YCP`, `MarketCategory`, `Electronic` )
+SELECT `Code`, `LastUpdate`, `DayVolumn`, `DayValue`, `TotalTrade`, `DayRange`, `Week52Range`, `LTP`, `YCP`, `MarketCategory`, `Electronic` FROM Tradings_Dump
+
+
+DELETE FROM Tradings_Dump
+
+00DS30
+00DSES
+00DSEX
+
+
+
+
+https://startbootstrap.com/template-categories/unstyled/
+
