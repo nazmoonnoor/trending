@@ -11,7 +11,7 @@
                 sortOrders[key] = 1;
             });
             return {
-                sortKey: '',
+                sortKey: 'Value',
                 sortOrders: sortOrders
             }
         },
@@ -32,8 +32,11 @@
                     data = data.slice().sort(function(a, b) {
                         a = a[sortKey];
                         b = b[sortKey];
-                        return (a === b ? 0 : a > b ? 1 : -1) * order;
+                        return (a === b ? 0 : a < b ? 1 : -1) * order;
                     });
+                }
+                for (var i = 0; i < data.length; i++) {
+                    data[i]["#"] = i + 1;
                 }
                 return data;
             }
@@ -57,12 +60,8 @@ var now = new Vue({
     data: {
         items: [],
         searchQuery: '',
-        gridColumns: ['Scrip', 'Trade', 'Value', 'Volume'],
+        gridColumns: ['#', 'Scrip', 'Change', 'Trade', 'Value', 'Volume', 'Spiked', 'Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
         gridData: [
-            //{ name: 'Chuck Norris', power: Infinity },
-            //{ name: 'Bruce Lee', power: 9000 },
-            //{ name: 'Jackie Chan', power: 7000 },
-            //{ name: 'Jet Li', power: 8000 }
         ]
     },
     mounted: function () {
@@ -71,6 +70,19 @@ var now = new Vue({
             url: '../api/defaultapi/now',
             method: 'GET',
             success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    data[i]["Volume"] = meaningAmt(data[i]["Volume"]);
+                    if (data[i].Quotes.length > 5) {
+                        data[i]["Spiked"] = data[i]['Value'] * 1000000 > (data[i].Quotes[data[i].Quotes.length - 2].Value + data[i].Quotes[data[i].Quotes.length - 3].Value)
+                            || data[i]['Value'] * 1000000 > (data[i].Quotes[data[i].Quotes.length - 2].Value * 2) ? "YES" : "";
+
+                        data[i]["Day 1"] = meaningAmt(data[i].Quotes[data[i].Quotes.length - 2].Value) + " (" + meaningAmt(data[i].Quotes[data[i].Quotes.length - 2].Volume) + ")";
+                        data[i]["Day 2"] = meaningAmt(data[i].Quotes[data[i].Quotes.length - 3].Value) + " (" + meaningAmt(data[i].Quotes[data[i].Quotes.length - 3].Volume) + ")";
+                        data[i]["Day 3"] = meaningAmt(data[i].Quotes[data[i].Quotes.length - 4].Value) + " (" + meaningAmt(data[i].Quotes[data[i].Quotes.length - 4].Volume) + ")";
+                        data[i]["Day 4"] = meaningAmt(data[i].Quotes[data[i].Quotes.length - 5].Value) + " (" + meaningAmt(data[i].Quotes[data[i].Quotes.length - 5].Volume) + ")";
+                        data[i]["Day 5"] = meaningAmt(data[i].Quotes[data[i].Quotes.length - 6].Value) + " (" + meaningAmt(data[i].Quotes[data[i].Quotes.length - 6].Volume) + ")";
+                    }
+                }
                 self.gridData = data;
                 console.log(data);
             },
@@ -78,5 +90,24 @@ var now = new Vue({
                 console.log(error);
             }
         });
+
+        function meaningAmt(labelValue) {
+
+            // Nine Zeroes for Billions
+            return Math.abs(Number(labelValue)) >= 1.0e+9
+
+                ? Math.abs(Number(labelValue)) / 1.0e+9 + "B"
+                // Six Zeroes for Millions 
+                : Math.abs(Number(labelValue)) >= 1.0e+6
+
+                    ? Math.abs(Number(labelValue)) / 1.0e+6 + "M"
+                    // Three Zeroes for Thousands
+                    : Math.abs(Number(labelValue)) >= 1.0e+3
+
+                        ? Math.abs(Number(labelValue)) / 1.0e+3 + "K"
+
+                        : Math.abs(Number(labelValue));
+
+        }
     }
 })

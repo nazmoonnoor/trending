@@ -73,7 +73,7 @@ footer li:before {
   color: #147efb;
 }
 
-
+/*table*/
 table {
     border: 2px solid #42b983;
     border-radius: 3px;
@@ -91,7 +91,7 @@ th {
 }
 
 td {
-    background-color: #f9f9f9;
+    /*background-color: #f9f9f9;*/
 }
 
 th, td {
@@ -127,3 +127,34 @@ th.active .arrow {
     border-right: 4px solid transparent;
     border-top: 4px solid #fff;
 }
+
+
+/* CSS goes in the document HEAD or added to your external stylesheet --> */
+table.gridtable {
+    font-family: verdana,arial,sans-serif;
+    font-size: 11px;
+    color: #333333;
+    border-width: 1px;
+    border-color: #666666;
+    border-collapse: collapse;
+}
+
+table.gridtable th {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    /*background-color: #dedede;*/
+}
+
+table.gridtable td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    /*background-color: #ffffff;*/
+}
+
+    table.gridtable tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
