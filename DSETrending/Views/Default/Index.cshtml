@@ -14,13 +14,13 @@
 <div class="columns is-multiline is-mobile">
     @for (int i = 0; i < Model.Count(); i++)
     {
-        <div class="column is-3">
+        <div class="column is-4">
             @{
                 var item = Model.ElementAt(i);
-                string lankabd = string.Format(@"http://lankabd.com/portal/DSE/smartChartFullScreen.html?symbol={0}&siteLanguage=en", item.Code);
-                string amarstock = string.Format(@"https://www.amarstock.com/interactive-chart?symbol={0}", item.Code);
-                bool spikedVolume = item.VolumeSum < item.DayVolumn;
-                double DayValueInKoti = item.DayValue / 10000000;
+                string lankabd = string.Format(@"http://lankabd.com/portal/DSE/smartChartFullScreen.html?symbol={0}&siteLanguage=en", item.Scrip);
+                string amarstock = string.Format(@"https://www.amarstock.com/interactive-chart?symbol={0}", item.Scrip);
+                //bool spikedVolume = item.VolumeSum < item.DayVolumn;
+                double DayValueInKoti = item.Value / 10000000;
                 //DayValueInKoti = Math.Round(DayValueInKoti, 2);
             }
             <div class="card is-shady">
@@ -32,20 +32,20 @@
                 <div class="card-content" style="padding: 0;font-size:0.9em">
                     <div class="media">
                         <div class="media-content" style="padding-left: 15px;">
-                            <strong class="is-4 no-padding">@item.Code</strong>
-                            <p class="is-4 no-padding">Vol: @item.DayVolumn, Value: @DayValueInKoti</p>
+                            <strong class="is-4 no-padding">@item.Scrip</strong>
+                            <p class="is-4 no-padding">Vol: @item.Volumn, Value: @DayValueInKoti</p>
                             <p>@item.TotalTrade</p>
                             <p>@item.DayRange</p>
                             <p>Cat: @item.MarketCategory, Electronic: @item.Electronic</p>
                         </div>
-                        @if (spikedVolume)
+                        @*@if (spikedVolume)
                         {
                             <div class="media-left">
                                 <figure class="image is-48x48">
                                     <img src="~/Content/images/red-check-mark.png" alt="Image">
                                 </figure>
                             </div>
-                        }
+                        }*@
                         
                     </div>
                     <div class="content">

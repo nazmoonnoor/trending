@@ -18,14 +18,21 @@ namespace DSETrending.Controllers.Api
         public IHttpActionResult GetTrades()
         {
             var result = AppManager.GetTrades(1);
+            //var stocks = AppManager.GetStockInfo();
+            //var result = Core.Extensions.Sort(stocks.ToList(), "Value");
             return Ok(result);
         }
 
         [HttpGet]
         public IHttpActionResult Now()
         {
-            var result = AppManager.GetNowTrades();
-            return Ok(result);
+            var now = AppManager.GetNowTrades();
+            var stocks = AppManager.GetStockInfo();
+            return Ok(new
+            {
+                now,
+                stocks
+            });
         }
     }
 }

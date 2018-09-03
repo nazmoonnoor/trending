@@ -100,5 +100,12 @@ namespace Core
                 .GetProperty(property)
                 .GetValue(p, null)).ToList();
         }
+
+        public static List<dynamic> Sort<T>(List<dynamic> input, string property)
+        {
+            var type = typeof(T);
+            var sortProperty = type.GetProperty(property);
+            return input.OrderBy(p => sortProperty.GetValue(p, null)).ToList();
+        }
     }
 }

@@ -15,15 +15,19 @@ namespace DSETrending.Controllers
         public ActionResult Index(string page, string spiked)
         {
             bool sp = !string.IsNullOrEmpty(spiked) && bool.Parse(spiked);
-            var lastDayTrades = AppManager.GetLastDayTrades("DayValue", sp);
+            //var lastDayTrades = AppManager.GetLastDayTrades("DayValue", sp);
             
             int size = 20;
             int p = string.IsNullOrEmpty(page) ? 0 : int.Parse(page) - 1;
             int skip = p * size;
-            var dayTrades = lastDayTrades as dynamic[] ?? lastDayTrades.ToArray();
-            ViewData["PageHeader"] = string.Format(@"{0} - {1} out of {2}", skip+1, skip+size, dayTrades.Count());
+            //var dayTrades = lastDayTrades as dynamic[] ?? lastDayTrades.ToArray();
+            
 
-            return View(dayTrades.Skip(skip).Take(size));
+            var result = AppManager.GetStockInfo().OrderByDescending(x=>x.Value);
+            //var result = Core.Extensions.Sort(stocks.ToList(), "Value");
+            //turn Ok(result);
+            ViewData["PageHeader"] = string.Format(@"{0} - {1} out of {2}", skip + 1, skip + size, result.Count());
+            return View(result.Skip(skip).Take(size));
         }
 
         public ActionResult Now(string page, string spiked)

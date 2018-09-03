@@ -184,7 +184,7 @@ namespace Core
             }
         }
 
-        public static dynamic GetNowTrades()
+        public static IEnumerable<dynamic> GetNowTrades()
         {
             string fundamental = string.Format("https://www.amarstock.com/top/all/mostactiveblock");
             using (System.Net.WebClient wc = new System.Net.WebClient())
@@ -192,12 +192,32 @@ namespace Core
                 try
                 {
                     var json = wc.DownloadString(fundamental);
-                    dynamic data = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                    IEnumerable<dynamic> data = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<dynamic>>(json);
                     return data;
                 }
                 catch
                 {
                     GetNowTrades();
+                }
+            }
+            return null;
+        }
+
+        public static IEnumerable<dynamic> GetStockInfo()
+        {
+            //https://www.amarstock.com/LatestPrice/GetLatestPriceList
+            string fundamental = string.Format("https://www.amarstock.com/LatestPrice/GetLatestPriceList");
+            using (System.Net.WebClient wc = new System.Net.WebClient())
+            {
+                try
+                {
+                    var json = wc.DownloadString(fundamental);
+                    IEnumerable<dynamic> data = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<dynamic>>(json);
+                    return data;
+                }
+                catch
+                {
+                    GetStockInfo();
                 }
             }
             return null;

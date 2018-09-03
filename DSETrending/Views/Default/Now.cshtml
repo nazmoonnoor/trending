@@ -8,7 +8,11 @@
 }
 
 @model List<string>
-
+<div>
+    1. watch list
+    <br/>
+    2. apply more strategies to find volumes
+</div>
 <!-- component template -->
 <script type="text/x-template" id="grid-template">
   <table class="gridtable">
@@ -27,9 +31,9 @@
     <tbody>
       <tr v-for="entry in filteredData">
         <td>
-            <a :href="`https://www.amarstock.com/chart?symbol=${entry[columns[1]]}`" target="_blank">sc</a>
-            <a :href="`https://www.amarstock.com/interactive-chart?symbol=${entry[columns[1]]}`" target="_blank">ic</a>
-            <a :href="`https://www.amarstock.com/volume-price-analysis?symbol=${entry[columns[1]]}`" target="_blank">vpa</a>
+            <a :href="`https://www.amarstock.com/chart?symbol=${entry[columns[2]]}`" target="_blank">sc</a>
+            <a :href="`https://www.amarstock.com/interactive-chart?symbol=${entry[columns[2]]}`" target="_blank">ic</a>
+            <a :href="`https://www.amarstock.com/volume-price-analysis?symbol=${entry[columns[2]]}`" target="_blank">vpa</a>
         </td>
         <td v-for="key in columns">
           {{entry[key]}}
