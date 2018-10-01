@@ -60,7 +60,7 @@ var now = new Vue({
     data: {
         items: [],
         searchQuery: '',
-        gridColumns: ['#', 'Sector', 'Scrip', 'Sec', 'Cat', 'LTP', 'Change', 'Trade', 'Value', 'Volume', 'Spiked', 'Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+        gridColumns: ['#', 'Sector', 'Scrip', 'Sec', 'Cat', 'LTP', 'Change', 'Trade', 'ChangePer', 'Value', 'Volume', 'Spiked', 'Top Bullish', 'Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
         gridData: [
         ]
     },
@@ -83,18 +83,23 @@ var now = new Vue({
                             data[i]["Spiked"] = data[i]['Value'] * 1000000 > (data[i].Quotes[data[i].Quotes.length - 2].Value + data[i].Quotes[data[i].Quotes.length - 3].Value)
                                 || data[i]['Value'] * 1000000 > (data[i].Quotes[data[i].Quotes.length - 2].Value * 2) ? "YES" : "";
 
-                            //data[i]["Day 1"] = meaningAmt(data[i].Quotes[data[i].Quotes.length - 2].Value) + " (" + meaningAmt(data[i].Quotes[data[i].Quotes.length - 2].Volume) + ")";
-                            //data[i]["Day 2"] = meaningAmt(data[i].Quotes[data[i].Quotes.length - 3].Value) + " (" + meaningAmt(data[i].Quotes[data[i].Quotes.length - 3].Volume) + ")";
-                            //data[i]["Day 3"] = meaningAmt(data[i].Quotes[data[i].Quotes.length - 4].Value) + " (" + meaningAmt(data[i].Quotes[data[i].Quotes.length - 4].Volume) + ")";
-                            //data[i]["Day 4"] = meaningAmt(data[i].Quotes[data[i].Quotes.length - 5].Value) + " (" + meaningAmt(data[i].Quotes[data[i].Quotes.length - 5].Volume) + ")";
-                            //data[i]["Day 5"] = meaningAmt(data[i].Quotes[data[i].Quotes.length - 6].Value) + " (" + meaningAmt(data[i].Quotes[data[i].Quotes.length - 6].Volume) + ")";
+                            data[i]["Top Bullish"] = stocks[i].LTP === stocks[i].High ? "BULL" : "";
 
-                            data[i]["Day 1"] = data[i].Quotes[data[i].Quotes.length - 2].Value;
-                            data[i]["Day 2"] = data[i].Quotes[data[i].Quotes.length - 3].Value;
-                            data[i]["Day 3"] = data[i].Quotes[data[i].Quotes.length - 4].Value;
-                            data[i]["Day 4"] = data[i].Quotes[data[i].Quotes.length - 5].Value;
-                            data[i]["Day 5"] = data[i].Quotes[data[i].Quotes.length - 6].Value;
-                            //data[i]["Spiked"] = 
+                            if (getQueryVariable('opt') !== 'cp') {
+                                data[i]["Day 1"] = data[i].Quotes[data[i].Quotes.length - 2].Value;
+                                data[i]["Day 2"] = data[i].Quotes[data[i].Quotes.length - 3].Value;
+                                data[i]["Day 3"] = data[i].Quotes[data[i].Quotes.length - 4].Value;
+                                data[i]["Day 4"] = data[i].Quotes[data[i].Quotes.length - 5].Value;
+                                data[i]["Day 5"] = data[i].Quotes[data[i].Quotes.length - 6].Value;
+                            } 
+                            else {
+                                data[i]["Day 1"] = getChangePer(data[i].Quotes[data[i].Quotes.length - 2]);
+                                data[i]["Day 2"] = getChangePer(data[i].Quotes[data[i].Quotes.length - 3]);
+                                data[i]["Day 3"] = getChangePer(data[i].Quotes[data[i].Quotes.length - 4]);
+                                data[i]["Day 4"] = getChangePer(data[i].Quotes[data[i].Quotes.length - 5]);
+                                data[i]["Day 5"] = getChangePer(data[i].Quotes[data[i].Quotes.length - 6]);
+                            }
+                            
                         }
 
                         gridArray.push(data[i]);
@@ -107,6 +112,10 @@ var now = new Vue({
                 console.log(error);
             }
         });
+
+        function getChangePer(row) {
+            return ((100 * (row.Close - row.Open)) / row.Open).toFixed(2);
+        }
 
         function meaningAmt(labelValue) {
 
@@ -125,6 +134,18 @@ var now = new Vue({
 
                         : Math.abs(Number(labelValue));
 
+        }
+
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split('&');
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split('=');
+                if (decodeURIComponent(pair[0]) == variable) {
+                    return decodeURIComponent(pair[1]);
+                }
+            }
+            console.log('Query variable %s not found', variable);
         }
     }
 })
